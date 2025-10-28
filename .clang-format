@@ -1,0 +1,61 @@
+# Основной стиль - ближе к Stroustrup
+BasedOnStyle: LLVM
+
+# Отступы и табы
+IndentWidth: 3
+TabWidth: 3
+UseTab: Never
+
+# 🎪 ФИГУРНЫЕ СКОБКИ - ключевое отличие Строуструпа!
+BreakBeforeBraces: Stroustrup
+AllowShortBlocksOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: InlineOnly
+
+# Пробелы
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: false
+
+# Выравнивание
+AlignAfterOpenBracket: BlockIndent
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignEscapedNewlines: Left
+AlignOperands: false
+AlignTrailingComments: true
+
+# Длина строки
+ColumnLimit: 100
+MaxEmptyLinesToKeep: 1
+
+# Include файлы
+SortIncludes: Never  # Строуструп предпочитает порядок зависимостей
+IncludeCategories:
+  - Regex:           '^<.*\.h>'
+    Priority:        1
+  - Regex:           '^<.*'
+    Priority:        2
+  - Regex:           '.*'
+    Priority:        3
+
+# Указатели и ссылки
+PointerAlignment: Left
+DerivePointerAlignment: false
+ReferenceAlignment: Left
+
+# Прочее
+IndentCaseLabels: true
+IndentGotoLabels: true
+FixNamespaceComments: true
+NamespaceIndentation: None
+
+# Настройки функций
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackArguments: false
+BinPackParameters: false
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: false

@@ -1,0 +1,57 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: cpp-dev
+    volumes:
+      - ./src:/project/src
+      - ./tests:/project/tests
+      - ./build:/project/build
+      - ./docs:/project/docs
+    working_dir: /project
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    container_name: cpp-prod
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: cpp-test
+    working_dir: /project
+    command: >
+      sh -c "mkdir -p build &&
+             cd build &&
+             cmake -G Ninja .. -DBUILD_TESTS=ON &&
+             ninja &&
+             ./tests/test_runner --success"
+    volumes:
+      - ./src:/project/src
+      - ./tests:/project/tests
+      - ./build:/project/build
+
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: docs
+    container_name: cpp-docs
+    volumes:
+      - ./docs:/project/docs
+      - ./docs/output:/project/docs/output
+    working_dir: /project
+    command: ["doxygen", "docs/Doxyfile"]
+

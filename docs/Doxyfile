@@ -1,0 +1,39 @@
+# Doxyfile конфигурация
+PROJECT_NAME           = "My C++ Project"
+PROJECT_NUMBER         = 1.0
+PROJECT_BRIEF          = "C++ project with doctest, Doxygen and Ninja"
+
+OUTPUT_DIRECTORY       = docs/output
+CREATE_SUBDIRS         = NO
+
+INPUT                  = ../src ../tests
+RECURSIVE              = YES
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+
+GENERATE_LATEX         = NO
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+
+PREDEFINED             = DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
+# Опции для C++
+OPTIMIZE_OUTPUT_FOR_C  = NO
+BUILTIN_STL_SUPPORT    = YES
+
+# Графики и диаграммы
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES

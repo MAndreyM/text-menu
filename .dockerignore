@@ -1,0 +1,114 @@
+# Git
+.git
+.gitignore
+.gitattributes
+.github/
+
+# Директории сборки
+build/
+build_*/
+*/build/
+*/build_*/
+*.o
+*.a
+*.so
+*.obj
+*.lib
+*.dll
+*.exe
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.ninja
+.ninja_deps
+.ninja_log
+compile_commands.json
+
+# Артефакты сборки
+*.sln
+*.vcxproj*
+*.xcodeproj/
+*.xcworkspace/
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+
+# Документация (генерируется)
+docs/output/
+docs/html/
+docs/latex/
+docs/rtf/
+
+# Пакеты и зависимости
+*.tar.gz
+*.zip
+*.7z
+*.rar
+*.deb
+*.rpm
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+.clion/
+
+# Профили и настройки
+.env
+.env.local
+.env.production
+*.env
+
+# Тестовые данные
+test_data/
+*.test
+*.benchmark
+
+# Скрипты (кроме тех что нужны для сборки)
+scripts/tmp/
+scripts/backup/
+
+# Документация разработчика (не для production)
+DEVELOPMENT.md
+TODO.md
+NOTES.md
+
+# Локальные конфиги
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Резервные копии
+*_backup
+backup_*
+
+# Кэш
+.cache/
+__pycache__/
+*.pyc
+
+# Исключения (что должно быть включено в Docker образ)
+!scripts/build-dev.sh
+!scripts/build-prod.sh
+!scripts/test.sh
+!scripts/docs.sh
+!scripts/format.sh
+!docs/Doxyfile
+!src/
+!tests/
+!CMakeLists.txt
+!docker-compose.yml

@@ -1,0 +1,229 @@
+# ================================
+# Build outputs
+# ================================
+
+# CMake build directories
+build/
+build_*/
+*/build/
+*/build_*/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.ninja
+.ninja_deps
+.ninja_log
+compile_commands.json
+
+# Object files and libraries
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.lib
+
+# Executables
+*.exe
+myapp
+test_runner
+
+# ================================
+# IDE and Editor files
+# ================================
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# CLion
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Studio
+*.sln
+*.vcxproj*
+*.filters
+*.user
+x64/
+x86/
+Win32/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+
+# ================================
+# Documentation generated files
+# ================================
+
+docs/output/
+docs/html/
+docs/latex/
+docs/rtf/
+
+# Doxygen tag file
+Doxyfile.bak
+
+# ================================
+# System and temporary files
+# ================================
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ================================
+# Package and dependency files
+# ================================
+
+# Compressed archives
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+# Package files
+*.deb
+*.rpm
+
+# ================================
+# Docker and Container files
+# ================================
+
+# Docker compose override
+docker-compose.override.yml
+
+# Docker temporary files
+.dockerignore.bak
+
+# ================================
+# Environment and config files
+# ================================
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Local configuration
+config.local.yaml
+config.local.json
+
+# ================================
+# Test and coverage reports
+# ================================
+
+# Unit test reports
+test-reports/
+*.test.xml
+*.junit.xml
+
+# Coverage reports
+coverage/
+*.gcda
+*.gcno
+*.gcov
+
+# Profiling data
+*.prof
+*.gprof
+
+# ================================
+# Development tool files
+# ================================
+
+# Clangd
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+
+# ================================
+# Project specific ignores
+# ================================
+
+# Large data files (если есть)
+data/large_files/
+*.bin
+*.dat
+
+# Backup directories
+backup/
+temp/
+
+# Local development scripts
+scripts/local/
+scripts/tmp/
+
+# ================================
+# Исключения (что должно быть в репозитории)
+# ================================
+
+# Важные скрипты
+!scripts/build-dev.sh
+!scripts/build-prod.sh
+!scripts/test.sh
+!scripts/docs.sh
+!scripts/format.sh
+!scripts/deploy.sh
+
+# Конфигурационные файлы
+!docs/Doxyfile
+!docker-compose.yml
+!.github/workflows/ci-cd.yml
+
+# Исходный код
+!src/**
+!tests/**
+
+# CMake файлы
+!CMakeLists.txt
+!src/CMakeLists.txt
+!tests/CMakeLists.txt
+
+# Документация
+!docs/README.md
+!README.md
+
+# Лицензии
+!LICENSE
+!COPYING
+
+# Git hooks (если используются)
+!.githooks/
