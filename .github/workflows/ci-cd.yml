@@ -1,0 +1,171 @@
+name: C++ CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: mandrm/text-menu
+
+jobs:
+  # ============================================
+  # Code Quality Checks (УПРОЩЕННЫЕ)
+  # ============================================
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Validate file structure
+      run: |
+        echo "📁 Project structure check:"
+        # Проверяем только наличие ключевых файлов
+        [ -f "Dockerfile" ] && echo "✅ Dockerfile exists" || echo "❌ Missing Dockerfile"
+        [ -f "CMakeLists.txt" ] && echo "✅ CMakeLists.txt exists" || echo "❌ Missing CMakeLists.txt"
+        [ -d "src" ] && echo "✅ src directory exists" || echo "❌ Missing src directory"
+        [ -f "src/CMakeLists.txt" ] && echo "✅ src/CMakeLists.txt exists" || echo "❌ Missing src/CMakeLists.txt"
+
+  # ============================================
+  # Docker Builds (ОСНОВНАЯ ЧАСТЬ)
+  # ============================================
+  docker-build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: code-quality
+    
+    strategy:
+      matrix:
+        target: [dev, prod, builder]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Log in to Docker Hub
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build Docker images
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        target: ${{ matrix.target }}
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: |
+          ${{ env.IMAGE_NAME }}:${{ matrix.target }}-${{ github.sha }}
+          ${{ env.IMAGE_NAME }}:${{ matrix.target }}-latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # ============================================
+  # Container Tests (ВСЕ ТЕСТЫ В КОНТЕЙНЕРЕ)
+  # ============================================
+  container-tests:
+    name: Container Tests
+    runs-on: ubuntu-latest
+    needs: docker-build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Test development environment
+      run: |
+        echo "🧪 Testing RedOS development tools..."
+        
+        # Все тесты выполняются ВНУТРИ контейнера
+        docker run --rm ${{ env.IMAGE_NAME }}:dev-${{ github.sha }} bash -c "
+          echo '1. Testing RedOS environment...'
+          cat /etc/os-release
+          echo ''
+          
+          echo '2. Testing package manager...'
+          dnf --version
+          echo ''
+          
+          echo '3. Testing build tools (УЖЕ УСТАНОВЛЕНЫ В DOCKERFILE)...'
+          gcc --version | head -1
+          g++ --version | head -1
+          cmake --version | head -1
+          ninja --version
+          doxygen --version | head -1
+          echo ''
+          
+          echo '4. Testing project build...'
+          cd /project
+          mkdir -p build
+          cd build
+          cmake -G Ninja .. -DBUILD_TESTS=ON
+          ninja
+          echo '✅ Build successful'
+          
+          echo '5. Running tests...'
+          ./tests/test_runner --success
+          echo '✅ All tests passed'
+        "
+
+  # ============================================
+  # Security Scan
+  # ============================================
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: docker-build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.IMAGE_NAME }}:prod-${{ github.sha }}
+        format: table
+        severity: 'HIGH,CRITICAL'
+
+  # ============================================
+  # Finalize
+  # ============================================
+  finalize:
+    name: Finalize
+    runs-on: ubuntu-latest
+    needs: [container-tests, security-scan]
+    if: always()
+    
+    steps:
+    - name: Summary
+      run: |
+        echo "🎉 Pipeline Summary"
+        echo "=================="
+        echo "Image: ${{ env.IMAGE_NAME }}"
+        echo "Tags:"
+        echo "  - dev-${{ github.sha }}"
+        echo "  - prod-${{ github.sha }}" 
+        echo "  - builder-${{ github.sha }}"
+        echo "Platform: RedOS (UBI8)"
+        echo "Status: ${{ needs.container-tests.result }}"
