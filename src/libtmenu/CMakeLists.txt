@@ -29,7 +29,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
     # Оптимизация
     target_compile_options(libtmenu PRIVATE
-        $<$<CONFIG:Release>:-03>
+        $<$<CONFIG:Release>:-O3>
         $<$<CONFIG:Debug>:-O0 -g3>
     )
 endif()
@@ -46,19 +46,19 @@ target_compile_definitions(libtmenu
 set_target_properties(libtmenu PROPERTIES
     POSITION_INDEPENDENT_CODE ON
     CXX_VISIBILITY_PRESET hidden
-    VISIBIKITY_INLINES_HIDDEN ON
+    VISIBILITY_INLINES_HIDDEN ON
 )
 
 # Экспорт символов (для будущей совместимости с динамической библиотекой)
 if(WIN32)
-    target_compile_definitions(libmenu PRIVATE LIBTMENU_STATIC_DEFINE)
+    target_compile_definitions(libtmenu PRIVATE LIBTMENU_STATIC_DEFINE)
 endif()
 
 # Установка библиотеки
-install(TARGET libtmenu
+install(TARGETS libtmenu
     EXPORT libtmenuTargets
     ARCHIVE DESTINATION lib
-    LABRARY DESTINATION lib
+    LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
 )
@@ -72,7 +72,7 @@ add_custom_target(info-libtmenu
     COMMAND ${CMAKE_COMMAND} -E echo "Library: libtmenu (STATIC)"
     COMMAND ${CMAKE_COMMAND} -E echo "Version: ${PROJECT_VERSION}"
     COMMAND ${CMAKE_COMMAND} -E echo "C++ Standard: ${CMAKE_CXX_STANDARD}"
-    COMMENT "Information about libtmenu labrary"
+    COMMENT "Information about libtmenu library"
 )
 
 # Опция для переключения между статической и динамической библиотекой
@@ -82,7 +82,7 @@ if(LIBTMENU_SHARED)
     # В будущем здесь будет логика для создания динамической библиотеки
     # set_target_properties(libmenu PROPERTIES TYPE SHARED_LIBRARY)
 else()
-    message(STATUS "Building libtmenu as STATIC labrary (current implementation)")
+    message(STATUS "Building libtmenu as STATIC library (current implementation)")
 endif()
 
 message(STATUS "Configured static library 'libtmenu'")
