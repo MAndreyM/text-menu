@@ -1,10 +1,13 @@
 # Конфигурация основного приложения
-cmake_minimum_required(VERSION 3.15)
+#cmake_minimum_required(VERSION 3.15)
 
-# Создаем исполняемый файл
+# Основное приложение теперь юудет использовать библиотеку libtmenu
 add_executable(text-menu
     main.cpp
 )
+
+# Линковка с библиотекой меню
+target_link_libraries(text-menu PRIVATE libtmenu)
 
 # Настройки компиляции для C++17
 target_compile_features(text-menu PRIVATE cxx_std_17)
@@ -60,8 +63,6 @@ endif()
 # Установка для production развертывания
 install(TARGETS text-menu
     RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
 )
 
 # Дополнительная цель для запуска приложения
@@ -119,5 +120,3 @@ message(STATUS "  C++ Standard: ${CMAKE_CXX_STANDARD}")
 
 # Экспорт переменных для родительского CMakeLists.txt
 set(MYAPP_TARGET text-menu PARENT_SCOPE)
-
-
