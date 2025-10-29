@@ -4,6 +4,7 @@
 
 add_library(libtmenu STATIC
     include/command.hpp
+    command.cpp
 )
 
 # Публичные заголовки
