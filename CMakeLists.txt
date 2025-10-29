@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(myapp VERSION 1.0.0 LANGUAGES CXX)
+project(myapp VERSION 0.1.0 LANGUAGES CXX)
 
 # Настройки компилятора
 set(CMAKE_CXX_STANDARD 17)
@@ -37,7 +37,7 @@ if(USE_DOCTEST)
 endif()
 
 # Поддиректории
-add_subdirectory(src)
+add_subdirectory(src/libtmenu)
 
 if(BUILD_TESTS AND USE_DOCTEST)
     add_subdirectory(tests)
