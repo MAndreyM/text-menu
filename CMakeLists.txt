@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(myapp VERSION 0.1.0 LANGUAGES CXX)
+project(myapp VERSION 1.0.0 LANGUAGES CXX)
 
 # Настройки компилятора
 set(CMAKE_CXX_STANDARD 17)
@@ -15,6 +15,7 @@ endif()
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_DOCS "Build documentation" ON)
 option(USE_DOCTEST "Use doctest for testing" ON)
+option(BUILD_EXAMPLES "Build examples" ON)
 
 # Путь к doctest
 if(USE_DOCTEST)
@@ -31,15 +32,22 @@ if(USE_DOCTEST)
             message(STATUS "Found doctest in system: ${DOCTEST_INCLUDE_DIR}")
         else()
             message(WARNING "doctest not found, tests will be disabled")
-            set(BUILD_TESTS ON)
+            set(BUILD_TESTS OFF)
         endif()
     endif()
 endif()
 
 # Поддиректории
+
 add_subdirectory(src/libtmenu)
 
-if(BUILD_TESTS AND USE_DOCTEST)
+if(BUILD_EXAMPLES)
+    add_subdirectory(src/example)
+endif()
+
+add_subdirectory(src)
+
+if(BUILD_TESTS AND USE_DOCTEST AND DOCTEST_INCLUDE_DIR)
     add_subdirectory(tests)
 endif()
 
@@ -58,5 +66,3 @@ if(BUILD_DOCS)
         )
     endif()
 endif()
-
-

@@ -4,6 +4,7 @@
 # Основное приложение теперь юудет использовать библиотеку libtmenu
 add_executable(text-menu
     main.cpp
+    example/example.cpp
 )
 
 # Линковка с библиотекой меню
