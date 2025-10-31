@@ -41,9 +41,9 @@ endif()
 
 add_subdirectory(src/libtmenu)
 
-if(BUILD_EXAMPLES)
-    add_subdirectory(src/example)
-endif()
+#if(BUILD_EXAMPLES)
+#    add_subdirectory(src/example)
+#endif()
 
 add_subdirectory(src)
 
