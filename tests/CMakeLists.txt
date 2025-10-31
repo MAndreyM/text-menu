@@ -4,6 +4,7 @@ if(USE_DOCTEST AND DOCTEST_INCLUDE_DIR)
     # Исполняемый файл тестов
     add_executable(test_runner 
         test_main.cpp 
+        test_command.cpp
     )
 
     # Подключаем doctest
@@ -13,7 +14,7 @@ if(USE_DOCTEST AND DOCTEST_INCLUDE_DIR)
 #    target_link_libraries(test_runner myapp)
 
     # Настройка компиляции
-    target_compile_definitions(test_runner PRIVATE DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN)
+#    target_compile_definitions(test_runner PRIVATE DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN)
     
     # Добавляем тест в CTest
     add_test(NAME UnitTests COMMAND test_runner)

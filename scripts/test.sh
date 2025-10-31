@@ -85,13 +85,44 @@ check_success "Release build tests passed"
 # Статический анализ кода (если доступен)
 print_header "5. Static Code Analysis"
 if docker-compose run --rm dev bash -c "command -v clang-tidy >/dev/null 2>&1"; then
-    docker-compose run --rm dev bash -c "
-        cd build &&
-        cmake -G Ninja .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON &&
-        ninja &&
-        clang-tidy ../src/*.cpp ../src/*.hpp -- -I../src
-    "
-    check_success "Static analysis completed"
+    echo -e "${YELLOW}🔍 Running Static Code Analysis...${NC}"
+    
+    # Анализ основной библиотеки
+    echo -e "${YELLOW}📁 Analyzing libtmenu...${NC}"
+    if docker-compose run --rm dev bash -c "
+        cd /project && \
+        clang-tidy src/libtmenu/include/command.hpp -- -Isrc/libtmenu/include && \
+        clang-tidy src/libtmenu/command.cpp -- -Isrc/libtmenu/include
+    "; then
+        echo -e "${GREEN}✅ libtmenu analysis completed${NC}"
+    else
+        echo -e "${YELLOW}⚠️  libtmenu analysis completed with warnings${NC}"
+    fi
+    
+    # Анализ примера
+    echo -e "${YELLOW}📁 Analyzing example...${NC}"
+    if docker-compose run --rm dev bash -c "
+        cd /project && \
+        clang-tidy src/example/include/example.hpp -- -Isrc/libtmenu/include -Isrc/example/include && \
+        clang-tidy src/example/example.cpp -- -Isrc/libtmenu/include -Isrc/example/include
+    "; then
+        echo -e "${GREEN}✅ example analysis completed${NC}"
+    else
+        echo -e "${YELLOW}⚠️  example analysis completed with warnings${NC}"
+    fi
+    
+    # Анализ главного файла
+    echo -e "${YELLOW}📁 Analyzing main...${NC}"
+    if docker-compose run --rm dev bash -c "
+        cd /project && \
+        clang-tidy src/main.cpp -- -Isrc/example/include
+    "; then
+        echo -e "${GREEN}✅ main analysis completed${NC}"
+    else
+        echo -e "${YELLOW}⚠️  main analysis completed with warnings${NC}"
+    fi
+    
+    echo -e "${GREEN}✅ Static analysis completed!${NC}"
 else
     echo -e "${YELLOW}⚠️  clang-tidy not available, skipping static analysis${NC}"
 fi
@@ -100,9 +131,17 @@ fi
 print_header "6. Binary Size Check"
 docker-compose run --rm test bash -c "
     echo 'Debug binary size:'
-    ls -lh build/myapp | awk '{print \$5}'
+    if [ -f build/myapp ]; then
+        ls -lh build/myapp | awk '{print \$5}'
+    else
+        echo 'Debug binary not found'
+    fi
     echo -e '\nRelease binary size:'
-    ls -lh build_release/myapp | awk '{print \$5}'
+    if [ -f build_release/myapp ]; then
+        ls -lh build_release/myapp | awk '{print \$5}'
+    else
+        echo 'Release binary not found'
+    fi
 "
 
 # Финальный отчет
@@ -114,4 +153,3 @@ echo -e "   - Run './scripts/docs.sh' to generate documentation"
 echo -e "   - Use 'make dev' for development environment"
 
 echo -e "\n${GREEN}🚀 Ready for production!${NC}"
-

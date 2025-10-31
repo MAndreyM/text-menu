@@ -1,6 +1,7 @@
-//#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../third_party/doctest/doctest.h"
 
+/*
 TEST_CASE("Basic test") {
     CHECK(1 + 1 == 2);
 }
@@ -13,3 +14,4 @@ TEST_CASE("Another test") {
         CHECK_FALSE(false);
     }
 }
+*/

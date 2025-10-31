@@ -1,6 +1,9 @@
+#include "example/include/example.hpp"
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    example::demoCommands();
+ //   std::cout << "Hello, text-menu." << std::endl;
+
     return 0;
 }
